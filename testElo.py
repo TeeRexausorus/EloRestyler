@@ -1,14 +1,22 @@
 import http.client
 import json
+import os
 from html2image import Html2Image
 from Levenshtein import distance
 from templates import templatePole, templateLine, templateClock, headerHtml, messages, prompt, promptBasicMessage, templateAi
 import google.generativeai as genai
 
-gemini_api = "AIzaSyDojmcOLgdF1xbqTyspJMjYCQhO-u-ExFY"
+gemini_api = os.environ["GEMINI_API"]
 genai.configure(api_key=gemini_api)
 model = genai.GenerativeModel('gemini-1.5-pro-latest')
-hti = Html2Image(size=(1630, 650))
+hti = Html2Image(size=(1630, 650), browser="chrome",
+                 custom_flags=[
+                     '--no-sandbox',
+                     '--headless',
+                     '--disable-gpu',
+                     '--disable-software-rasterizer',
+                     '--disable-dev-shm-usage'
+                 ])
 
 
 class Plat:
@@ -68,7 +76,7 @@ def generate_html():
         polesHtml += templatePole.format(pole=key, line=lineHtml)
     polesHtml += '</div>'
     print(prompts)
-    #polesHtml += templateAi.format(text=ask_gemini(prompts).replace('\r', '<br/>').replace('\n', '<br/>'))
+    polesHtml += templateAi.format(text=ask_gemini(prompts).replace('\r', '<br/>').replace('\n', '<br/>'))
     polesHtml += templateClock.format(day=dateMenu, message=messages[sumDate % (len(messages))])
     polesHtml += '</body>'
 
@@ -76,7 +84,6 @@ def generate_html():
 def ask_gemini(prompts):
     query_prompt = promptBasicMessage + '\r\n' + '\r\n'.join(prompts)
     return model.generate_content(query_prompt).text
-
 
 
 if __name__ == '__main__':
