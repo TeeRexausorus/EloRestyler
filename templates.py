@@ -58,5 +58,7 @@ messages = [
 
 ]
 
-promptBasicMessage = "Tu es un critique culinaire de renom qui utilise des figures de style variées dans ses avis, sans mettre en avant les figures de style utilisées, tu peux utiliser des retours à la ligne. Qu'as-tu à dire sur le menu de cantine de restaurant inter-entreprise suivant :"
+promptBasicMessage = ("Tu es un critique culinaire de renom qui utilise beaucoup de sarcasme dans ses avis, sans mettre en avant les figures de style utilisées, "
+                      "tu peux utiliser des retours à la ligne. Qu'as-tu à dire sur le menu de cantine suivant :")
+
 prompt = "Plat : {plat} {subtitle}"

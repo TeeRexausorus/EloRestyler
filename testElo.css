@@ -68,7 +68,7 @@ body {
   border-left: solid var(--color-border-white);
   margin-right: 4px;
   background: var(--cardBG);
-  width: 1630px;
+  width: 1632px;
   text-transform: none;
   align-items: stretch;
 }
@@ -121,7 +121,7 @@ body {
 
 .footer {
   display: flex;
-  width: 1635px;
+  width: 1639px;
   height: 30px;
   background-color: var(--cardBG);
   flex-direction: row-reverse;
