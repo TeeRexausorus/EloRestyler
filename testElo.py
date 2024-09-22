@@ -9,14 +9,14 @@ import google.generativeai as genai
 gemini_api = os.environ["GEMINI_API"]
 genai.configure(api_key=gemini_api)
 model = genai.GenerativeModel('gemini-1.5-pro-latest')
-hti = Html2Image(size=(1630, 650), browser="chrome",
+hti = Html2Image(size=(1640, 550), browser="chrome",
                  custom_flags=[
                      '--no-sandbox',
                      '--headless',
                      '--disable-gpu',
                      '--disable-software-rasterizer',
                      '--disable-dev-shm-usage'
-                 ])
+                 ], output_path="output/")
 
 
 class Plat:
