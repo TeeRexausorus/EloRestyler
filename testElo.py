@@ -5,6 +5,8 @@ from html2image import Html2Image
 from Levenshtein import distance
 from templates import templatePole, templateLine, templateClock, headerHtml, messages, prompt, promptBasicMessage, templateAi
 import google.generativeai as genai
+from cleantext import clean
+
 
 gemini_api = os.environ["GEMINI_API"]
 genai.configure(api_key=gemini_api)
@@ -16,7 +18,7 @@ hti = Html2Image(size=(1640, 550), browser="chrome",
                      '--disable-gpu',
                      '--disable-software-rasterizer',
                      '--disable-dev-shm-usage'
-                 ], output_path="output/")
+                 ], output_path="output")
 
 
 class Plat:
@@ -51,7 +53,8 @@ def generate_stuff_yolo():
         dateForFilename = dateMenu[6:] + '_' + dateMenu[4:6] + '_' + dateMenu[:4]
         dateMenu = dateMenu[6:] + '/' + dateMenu[4:6] + '/' + dateMenu[:4]
         if line['accompagnement'] == 'TRUE':
-            poles['accompagnement'] = []
+            if 'accompagnement' not in poles:
+                poles['accompagnement'] = []
             poles['accompagnement'].append(Plat(line['nom'].strip(), '', line['info1'].strip(), line['info2'].strip()))
         if line['pole'] not in poles:
             poles[line['pole']] = []
@@ -75,10 +78,10 @@ def generate_html():
                 prompts.append(prompt.format(plat=plat.name, subtitle=plat.info1))
         polesHtml += templatePole.format(pole=key, line=lineHtml)
     polesHtml += '</div>'
-    print(prompts)
-    polesHtml += templateAi.format(text=ask_gemini(prompts).replace('\r', '<br/>').replace('\n', '<br/>'))
+    print(dateForFilename, prompts)
+    # polesHtml += templateAi.format(text=ask_gemini(prompts).replace('\r', '<br/>').replace('\n', '<br/>'))
     polesHtml += templateClock.format(day=dateMenu, message=messages[sumDate % (len(messages))])
-    polesHtml += '</body>'
+    polesHtml += '</div></body>'
 
 
 def ask_gemini(prompts):
@@ -103,8 +106,9 @@ if __name__ == '__main__':
     generate_stuff_yolo()
     generate_html()
     with open('test.html', 'w') as f:
-        f.write(polesHtml)
-    hti.screenshot(html_file="test.html", css_file='testElo.css',
-                   save_as='menu_' + dateForFilename + '.png')
+        f.write(clean(polesHtml, no_emoji=True))
+    with open('test.html', 'r'):
+        hti.screenshot(html_file="test.html", css_file='testElo.css',
+                       save_as='menu_' + dateForFilename + '.png')
     ''' hti.screenshot(html_str=polesHtml, css_file='testElo.css',
                    save_as='latest.png')'''

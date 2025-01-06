@@ -37,6 +37,7 @@ headerHtml = '''
   <link href="testElo.css" rel="stylesheet" />
 </head>
 <body>
+<div>
 <div class="cards">
 '''
 messages = [
